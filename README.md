@@ -1,4 +1,4 @@
-# Simple Q&A Chatbot
+# College Q&A Chatbot
 
 A beginner-friendly question-answer chatbot built with Python Flask and HTML/JavaScript. The chatbot reads answers from text files and responds to user questions through a web interface.
 
