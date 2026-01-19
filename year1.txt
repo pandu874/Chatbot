@@ -1,0 +1,8 @@
+1st Year Engineering Student Guidance
+
+Students should focus on building strong fundamentals.
+Subjects: Engineering Mathematics, Physics, Basic Programming.
+Programming Languages: C, Python.
+Skills: Problem solving, logical thinking, communication.
+Tools: Git, GitHub, VS Code.
+Advice: Do not focus only on marks, focus on understanding concepts.

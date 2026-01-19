@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot - Q&A Assistant</title>
+    <style>
+        /* Basic styling for a clean, modern look */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .examples {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .examples p {
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .examples ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #666;
+        }
+
+        .examples li {
+            margin: 5px 0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #query {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #query:focus {
+            border-color: #667eea;
+        }
+
+        #sendBtn {
+            padding: 12px 30px;
+            font-size: 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        #sendBtn:hover {
+            background: #5568d3;
+        }
+
+        #sendBtn:active {
+            transform: scale(0.98);
+        }
+
+        #sendBtn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        #response {
+            min-height: 100px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .loading {
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border-color: #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Simple Q&A Chatbot</h1>
+
+        <!-- Example questions to help users -->
+        <div class="examples">
+            <p>💡 Try asking:</p>
+            <ul>
+                <li>"I am a 1st year student, what should I learn?"</li>
+                <li>"What skills are required for 3rd year students?"</li>
+                <li>"What should a 4th year focus on for placements?"</li>
+            </ul>
+        </div>
+
+        <!-- Input box and Send button -->
+        <div class="input-container">
+            <input 
+                id="query" 
+                type="text" 
+                placeholder="Type your question here..." 
+                onkeypress="handleKeyPress(event)"
+            />
+            <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+
+        <!-- Response area where bot's answer appears -->
+        <div id="response">Your answer will appear here...</div>
+    </div>
+
+    <script>
+        /**
+         * Handle Enter key press in the input box
+         * When user presses Enter, send the message
+         */
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        /**
+         * Send user's question to the backend and display the response
+         */
+        function sendMessage() {
+            // Get the question from input box
+            const questionInput = document.getElementById("query");
+            const question = questionInput.value.trim();
+
+            // Don't send if question is empty
+            if (!question) {
+                alert("Please enter a question!");
+                return;
+            }
+
+            // Get references to UI elements
+            const responseDiv = document.getElementById("response");
+            const sendBtn = document.getElementById("sendBtn");
+
+            // Show loading state
+            responseDiv.textContent = "Thinking...";
+            responseDiv.className = "loading";
+            sendBtn.disabled = true;
+            questionInput.disabled = true;
+
+            // Send POST request to /chat endpoint
+            fetch("/chat", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query: question })
+            })
+            .then(response => {
+                // Check if response is OK
+                if (!response.ok) {
+                    throw new Error("Server error");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display the answer from the bot
+                responseDiv.textContent = data.answer;
+                responseDiv.className = "";
+                
+                // Clear the input box
+                questionInput.value = "";
+            })
+            .catch(error => {
+                // Show error message if something went wrong
+                responseDiv.textContent = "❌ Error: Could not connect to server. Make sure the Flask app is running.";
+                responseDiv.className = "error";
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                // Re-enable the button and input
+                sendBtn.disabled = false;
+                questionInput.disabled = false;
+                questionInput.focus(); // Put cursor back in input box
+            });
+        }
+    </script>
+</body>
+</html>

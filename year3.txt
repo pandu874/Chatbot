@@ -1,0 +1,7 @@
+3rd Year Engineering Student Guidance
+
+Students should focus on career-oriented skills.
+Subjects: Advanced DSA, Operating Systems, Computer Networks.
+Skills: Web development or Machine Learning.
+Activities: Hackathons, internships, open-source contributions.
+Advice: Prepare resume and practice interview questions.

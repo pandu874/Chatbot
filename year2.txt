@@ -1,0 +1,8 @@
+2nd Year Engineering Student Guidance
+
+Students should focus on core technical subjects.
+Subjects: Data Structures, OOPS, DBMS.
+Programming Languages: Python, Java.
+Skills: Coding practice, database basics.
+Projects: Mini projects using Python or web development.
+Advice: Start preparing for internships and certifications.
